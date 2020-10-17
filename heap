@@ -1,0 +1,88 @@
+더 맵게
+단순 min heap구현
+import heapq
+def solution(scoville, k):
+    heapq.heapify(scoville)
+    chk=True; cnt=0
+    while chk and len(scoville)>1:
+        chk=False
+        fmin=heapq.heappop(scoville)
+        smin=heapq.heappop(scoville)
+        if fmin<k or smin<k:
+            cnt+=1; chk=True
+            res=fmin+smin*2
+            heapq.heappush(scoville, res)
+    for s in scoville:
+        if s<k: return -1
+    return cnt
+    
+디스크 컨트롤러
+import heapq
+def solution(jobs):
+    cnt = len(jobs);
+    j = 0
+    jobs.sort();
+    wq = [];  time =0; stime = 0;
+
+    while j < len(jobs) or len(wq) > 0:
+        for i in range(j, len(jobs)):
+            if jobs[i][0] > time: j=i-1; break
+            heapq.heappush(wq, [jobs[i][1], jobs[i][0]])
+            j=i
+        j+=1
+        if len(wq) > 0:
+            sjob = heapq.heappop(wq)
+            time += sjob[0]
+            stime += (time - sjob[1])
+        else:
+            time = jobs[j][0]
+    return stime // cnt
+    
+    
+    
+이중 우선순위 큐
+다른 사람 풀이 - maxheap, minheap동기화 방법
+from heapq import heappush, heappop
+
+def solution(arguments):
+    max_heap = []
+    min_heap = []
+    for arg in arguments:
+        if arg == "D 1":
+            if max_heap != []:
+                heappop(max_heap)
+                if max_heap == [] or -max_heap[0] < min_heap[0]:
+                    min_heap = []
+                    max_heap = []
+        elif arg == "D -1":
+            if min_heap != []:
+                heappop(min_heap)
+                if min_heap == [] or -max_heap[0] < min_heap[0]:
+                    max_heap = []
+                    min_heap = []
+        else:
+            num = int(arg[2:])
+            heappush(max_heap, -num)
+            heappush(min_heap, num)
+    if min_heap == []:
+        return [0, 0]
+    return [-heappop(max_heap), heappop(min_heap)]
+    
+
+내풀이
+우선순위 큐 말고 deque로 작성도 가능함
+import heapq
+def solution(operations):
+    answer = []
+
+    for operation in operations:
+        if operation[0]=='I':
+            heapq.heappush(answer, int(operation[2:]))
+        elif operation=='D -1'  and len(answer)>0:
+            heapq.heappop(answer)
+        elif operation=='D 1' and len(answer)>0:
+            answer.remove(max(answer))
+            heapq.heapify(answer)
+    if len(answer)==0: return [0,0]
+    else:
+        return [max(answer), min(answer)]
