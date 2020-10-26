@@ -1,0 +1,91 @@
+소수 찾기 - 에라토스테네스의 체
+void primenumber(int n) {
+	vector<int> v(n+1, 0);
+	for (int i = 2; i <= n/2; i++) {
+		for (int j = 2; j <= n/2; j++) {
+			if (i * j > n) break;
+			v[i * j] = 1;
+		}
+	}
+	for (int i = 1; i < n; i++)
+	{
+		if (v[i] == 1) continue;
+		printf("%d ", i);
+	}
+}
+
+사다리를 한 칸 또는 두 칸씩 오를 수 있다고 했을 때
+사다리 높이에 따른 사다리 오르기 방법의 경우의 수를 구한다.
+피보나치 수열 - dp이용
+long long arr[1000] = { 0,1,1, };
+
+long long  fibo(int n) {
+	if (arr[n]) return arr[n];
+	return arr[n]=fibo(n - 1) + fibo(n - 2);
+}
+
+
+주사위를 굴려 해당 숫자를 만들 수 있는 갯수
+-dp이용 안함
+int calcDice1(int n) {
+	if (n < 0) return 0;
+	if (n == 0) return 1;
+	return calcDice1(n - 1) + calcDice1(n - 2) + calcDice1(n - 3) +
+		calcDice1(n - 4) + calcDice1(n - 5) + calcDice1(n - 6);
+}
+
+-dp 이용
+int arr[100] = { 0,1 };
+int calcDice2(int n) {
+	if (n < 0) return 0;
+	if (n == 0) return 1;
+	int res = 0;
+	for (int i = 1; i <= 6; i++) {
+		if (n - i < 0) break;
+		if (arr[n - i] == 0)
+			arr[n - i] = calcDice2(n - i);
+		res += arr[n - i];
+	}
+	return res;
+}
+
+
+각 자리 숫자의 합
+void solution(int n) {
+	int res = 0;
+	while (n > 0) {
+		res += n % 10;
+		n = n / 10;
+	}
+	printf("%d", res);
+}
+
+
+//n비트 표현
+void bitnumber(int n, string str) {
+	if (str.length() == n) {
+		cout << str << "\n";
+		return;
+	}
+	
+	bitnumber(n, str + "0");
+	bitnumber(n, str + "1");
+}
+
+
+n개의 괄호로 만들 수 있는 표현 
+void bracetcom(int start, int end, string str) {
+	if (start > end) return;
+	if (start < 0 || end < 0) return;
+	if (start == 0 && end == 0) {
+		cout << str << endl;
+	}
+	bracetcom(start - 1, end, str + "(");
+	bracetcom(start, end - 1, str + ")");
+	return;
+}
+
+int main() {
+	bracetcom(2, 2, "");
+	
+}
