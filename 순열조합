@@ -1,0 +1,93 @@
+#include <iostream>
+#include <hash_map>
+#include <string>
+#include <vector>
+using namespace std;
+void swap(int* arr, int a, int b) {
+	int temp = arr[a];
+	arr[a] = arr[b];
+	arr[b] = temp;
+}
+void permutation(int* arr, int n, int r, int depth) {
+	if (depth == r) {
+		for (int i = 0; i < r; i++)
+			printf("%d ", arr[i]);
+		printf("\n");
+		return;
+	}
+	for (int i = depth; i < n; i++) {
+		swap(arr, i, depth);
+		permutation(arr, n, r, depth + 1);
+		swap(arr, depth, i);
+	}
+}
+
+
+void rperm(int* arr, int n, int r, int depth) {
+	if (depth == r) {
+		for (int i = 0; i < r; i++) {
+			printf("%d ", arr[i]);
+		}
+		printf("\n");
+		return;
+	}
+
+	for (int i = 0; i < n; i++) {
+		arr[depth] = i;
+		rperm(arr, n, r, depth + 1);
+	}
+}
+
+void combination(bool* visited, int* arr, int n, int r, int cnt, int idx) {
+	if (cnt == r) {
+		for (int i = 0; i < n; i++) {
+			if(visited[i]) printf("%d ", arr[i]);
+		}
+		printf("\n");
+		return;
+	}
+
+	for (int i = idx; i < n; i++) {
+		if (visited[i]) continue;
+		visited[i] = true;
+		combination(visited, arr, n, r, cnt+1, i);
+		visited[i] = false;
+	}
+}
+
+void hcombination(vector<int> v, int* arr, int n, int r, int cnt, int idx) {
+	if (cnt == r) {
+		for (int i = 0; i < r; i++) {
+			printf("%d ", v[i]);
+		}
+		printf("\n");
+		return;
+	}
+
+	for (int i = idx; i < n; i++) {
+		v.push_back(arr[i]);
+		hcombination(v, arr, n, r, cnt + 1, i);
+		v.pop_back();
+	}
+}
+
+
+int main() {
+	int arr[4] = { 1,2,3,4 };
+	int n = 4, r = 2;
+	rperm(arr, n, r, 0);
+	printf("==========================\n");
+
+	int arr1[4] = { 1,2,3,4 };
+	permutation(arr1, n, r, 0);
+
+	int arr2[4] = { 1,2,3,4 };
+	bool visited[4] = { false, };
+	printf("==========================\n");
+	combination(visited, arr2, n, r, 0,0);
+
+	int arr3[4] = { 1,2,3,4 };
+	vector<int> v;
+	printf("==========================\n");
+	hcombination(v, arr3, n, r, 0, 0);
+}
